@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-4">
+        {% if product.thumbnail %}
+        <img src="{{ product.thumbnail.url }}" class="img-fluid rounded" alt="{{ product.title }}">
+        {% else %}
+        <img src="{% static 'images/default-book.jpg' %}" class="img-fluid rounded" alt="{{ product.title }}">
+        {% endif %}
+    </div>
+    <div class="col-md-8">
+        <h2>{{ product.title }}</h2>
+        <p class="text-muted">লেখক: {{ product.author }}</p>
+        <p class="text-success fw-bold fs-4">{{ product.price }} টাকা</p>
+        
+        <div class="mb-4">
+            <h4>বিবরণ:</h4>
+            <p>{{ product.description }}</p>
+        </div>
+        
+        <a href="{% url 'store:checkout' product.pk %}" class="btn btn-primary btn-lg">এখনই কিনুন</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4>অর্ডার সম্পন্ন করুন</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">{{ product.title }}</h5>
+                <p class="card-text">মূল্য: {{ product.price }} টাকা</p>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form|crispy }}
+                    <button type="submit" class="btn btn-primary mt-3">অর্ডার সম্পন্ন করুন</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

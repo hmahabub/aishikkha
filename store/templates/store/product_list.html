@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-3">
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5>বিভাগসমূহ</h5>
+            </div>
+            <div class="list-group list-group-flush">
+                <a href="{% url 'store:product_list' %}" class="list-group-item list-group-item-action {% if not category %}active{% endif %}">সকল বই</a>
+                {% for cat in categories %}
+                <a href="{% url 'store:product_list_by_category' cat.slug %}" class="list-group-item list-group-item-action {% if category == cat %}active{% endif %}">{{ cat.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        <h2 class="mb-4">{% if category %}{{ category.name }}{% else %}সকল বই{% endif %}</h2>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-md-4">
+                <div class="card book-card">
+                    {% if product.thumbnail %}
+                    <img src="{{ product.thumbnail.url }}" class="card-img-top" alt="{{ product.title }}">
+                    {% else %}
+                    <img src="{% static 'images/default-book.jpg' %}" class="card-img-top" alt="{{ product.title }}">
+                    {% endif %}
+                    <div class="card-body">
+                        <h5 class="card-title">{{ product.title }}</h5>
+                        <p class="card-text">{{ product.author }}</p>
+                        <p class="text-success fw-bold">{{ product.price }} টাকা</p>
+                        <a href="{% url 'store:product_detail' product.pk %}" class="btn btn-primary">বিস্তারিত দেখুন</a>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info">কোন বই পাওয়া যায়নি</div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

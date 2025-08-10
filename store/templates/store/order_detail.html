@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4>আপনার অর্ডার সফলভাবে সম্পন্ন হয়েছে</h4>
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">ধন্যবাদ, {{ order.customer_name }}!</h5>
+                <p class="card-text">আপনার অর্ডার রেফারেন্স নম্বর: <strong>{{ order.reference_no }}</strong></p>
+                <p class="card-text">আপনার ইমেইল: {{ order.email }}</p>
+                <p class="card-text">আপনার ফোন নম্বর: {{ order.phone }}</p>
+                <p class="card-text">পণ্য: {{ order.product.title }}</p>
+                <p class="card-text">মূল্য: {{ order.product.price }} টাকা</p>
+                
+                <div class="alert alert-info mt-4">
+                    <p>পেমেন্ট সম্পন্ন হলে আমরা আপনাকে ইমেইলের মাধ্যমে জানাবো এবং ডাউনলোড লিঙ্ক প্রদান করবো।</p>
+                    <p>পেমেন্ট করতে নিচের বিকাশ/নগদ/রকেট নম্বরে টাকা পাঠান:</p>
+                    <p class="fw-bold">বিকাশ: ০১৭১২৩৪৫৬৭৮ (পার্সোনাল)</p>
+                    <p class="fw-bold">নগদ: ০১৭১২৩৪৫৬৭৮</p>
+                    <p class="fw-bold">রকেট: ০১৭১২৩৪৫৬৭৮</p>
+                    <p class="fw-bold">রেফারেন্স নম্বর হিসাবে অবশ্যই <span class="text-danger">{{ order.reference_no }}</span> লিখুন</p>
+                </div>
+                
+                <a href="#" class="btn btn-primary">ইনভয়েস ডাউনলোড করুন</a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

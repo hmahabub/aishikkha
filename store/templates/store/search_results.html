@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <h2 class="my-4">'"{{ query }}"' অনুসন্ধানের ফলাফল</h2>
+    
+    {% if products %}
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card book-card">
+                {% if product.thumbnail %}
+                <img src="{{ product.thumbnail.url }}" class="card-img-top" alt="{{ product.title }}">
+                {% else %}
+                <img src="{% static 'images/default-book.jpg' %}" class="card-img-top" alt="{{ product.title }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.title }}</h5>
+                    <p class="card-text">{{ product.author }}</p>
+                    <p class="text-success fw-bold">{{ product.price }} টাকা</p>
+                    <a href="{% url 'store:product_detail' product.pk %}" class="btn btn-primary">বিস্তারিত দেখুন</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-warning">
+        "{{ query }}" অনুসন্ধানের জন্য কোন ফলাফল পাওয়া যায়নি
+    </div>
+    <a href="{% url 'store:product_list' %}" class="btn btn-primary">সকল বই দেখুন</a>
+    {% endif %}
+</div>
+{% endblock %}
