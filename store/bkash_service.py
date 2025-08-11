@@ -80,6 +80,7 @@ class BkashService:
         }
         
         response = requests.post(url, headers=headers, json=data)
+        print(response.json())
         if response.status_code == 200:
             return response.json()
         return None
