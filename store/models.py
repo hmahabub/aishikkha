@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils.translation import gettext_lazy as _
+import uuid
 
 class Category(models.Model):
     name = models.CharField(_("বিভাগের নাম"), max_length=100)
@@ -31,18 +32,23 @@ class Product(models.Model):
         return self.title
 
 class Order(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name=_("পণ্য"))
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('paid', 'Paid'),
+        ('failed', 'Failed'),
+    ]
+    
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     customer_name = models.CharField(_("ক্রেতার নাম"), max_length=100)
     email = models.EmailField(_("ইমেইল"))
     phone = models.CharField(_("ফোন নম্বর"), max_length=15)
-    reference_no = models.CharField(_("রেফারেন্স নম্বর"), max_length=20, unique=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    bkash_payment_id = models.CharField(max_length=100, blank=True, null=True)
+    trx_id = models.CharField(max_length=100, blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    is_paid = models.BooleanField(_("পেমেন্ট সম্পন্ন"), default=False)
-    is_approved = models.BooleanField(_("অনুমোদিত"), default=False)
-    
-    class Meta:
-        verbose_name = _("অর্ডার")
-        verbose_name_plural = _("অর্ডারসমূহ")
+    updated_at = models.DateTimeField(auto_now=True)
     
     def __str__(self):
-        return f"Order #{self.reference_no}"
+        return f"Order {self.id} - {self.email}"

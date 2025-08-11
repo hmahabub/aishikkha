@@ -94,6 +94,18 @@ DATABASES = {
     }
 }
 
+from dotenv import load_dotenv
+
+load_dotenv()
+BKASH_CONFIG = {
+    'SANDBOX_BASE_URL': 'https://tokenized.sandbox.bka.sh/v1.2.0-beta/',
+    'PRODUCTION_BASE_URL': 'https://tokenized.pay.bka.sh/v1.2.0-beta',
+    'APP_KEY': '0vWQuCRGiUX7EPVjQDr0EUAYtc',
+    'APP_SECRET': 'jcUNPBgbcqEDedNKdvE4G1cAK7D3hCjmJccNPZZBq96QIxxwAMEx',
+    'USERNAME': '01770618567',
+    'PASSWORD': 'D7DaC<*E*eG',
+    'IS_SANDBOX': True,  # Set to False for production
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
