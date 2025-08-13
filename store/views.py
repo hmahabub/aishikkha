@@ -7,7 +7,7 @@ from django.contrib import messages
 import random
 import string
 from django.db.models import Q
-from django.http import JsonResponse, HttpResponse
+from django.http import JsonResponse, HttpResponse, FileResponse
 
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
@@ -221,11 +221,12 @@ def download_ebook(request, order_id):
     
     # Serve the file
     if order.product.pdf_file:
-        response = HttpResponse(
-            order.product.pdf_file.read(),
-            content_type='application/octet-stream'
+        response = FileResponse(
+            order.product.pdf_file.open('rb'),
+            content_type='application/pdf',
+            as_attachment=True,
+            filename=f"{order.product.title}.pdf"
         )
-        response['Content-Disposition'] = f'attachment; filename="{order.product.title}.pdf"'
         return response
     
     return HttpResponse('File not found', status=404)
