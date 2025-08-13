@@ -6,7 +6,7 @@ from django.core.cache import cache
 class BkashService:
     def __init__(self):
         self.config = settings.BKASH_CONFIG
-        self.base_url = self.config['SANDBOX_BASE_URL'] if self.config['IS_SANDBOX'] else self.config['PRODUCTION_BASE_URL']
+        self.base_url = self.config['PRODUCTION_BASE_URL']
         self.website_url = 'http://aishikkha.com'
     def get_token(self):
         # Check if token exists in cache

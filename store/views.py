@@ -108,6 +108,7 @@ def payment_page(request, order_id):
 
 @csrf_exempt
 def create_payment(request):
+    print("checkpoint 0")
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -119,7 +120,7 @@ def create_payment(request):
                 amount=float(order.amount),
                 invoice_number=str(order.id)
             )
-            
+            print(payment_response.get('statusCode'))
             if payment_response and payment_response.get('statusCode') == '0000':
                 order.bkash_payment_id = payment_response.get('paymentID')
                 order.save()
@@ -136,6 +137,7 @@ def create_payment(request):
                 })
                 
         except Exception as e:
+            print("checkpoint 2")
             logger.error(f"Payment creation error: {str(e)}")
             return JsonResponse({
                 'success': False,
