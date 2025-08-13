@@ -183,7 +183,7 @@ def execute_payment(request):
 def send_ebook_email(order):
     try:
         subject = f'Your eBook Purchase: {order.product.title}'
-        download_link = f"http://localhost:8000/download/{order.id}/"  # Update with your domain
+        download_link = f"http://aishikkha.com/download/{order.id}/"  # Update with your domain
         
         message = f"""
         Thank you for your purchase!

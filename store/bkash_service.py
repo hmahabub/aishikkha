@@ -7,7 +7,7 @@ class BkashService:
     def __init__(self):
         self.config = settings.BKASH_CONFIG
         self.base_url = self.config['SANDBOX_BASE_URL'] if self.config['IS_SANDBOX'] else self.config['PRODUCTION_BASE_URL']
-    
+        self.website_url = self.config['WEB_URL']
     def get_token(self):
         # Check if token exists in cache
         token = cache.get('bkash_token')
@@ -50,7 +50,7 @@ class BkashService:
         data = {
             'mode': '0011',
             'payerReference': invoice_number,
-            'callbackURL': f"http://localhost:8000/payment/callback/",  # Update with your domain
+            'callbackURL': f"{self.website_url}/payment/callback/",  # Update with your domain
             'amount': str(amount),
             'currency': 'BDT',
             'intent': intent,
