@@ -7,9 +7,20 @@ from django.contrib import messages
 import random
 import string
 from django.db.models import Q
+from django.http import JsonResponse, HttpResponse
+
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
+from .bkash_service import BkashService
+import json
+import logging
+
+
 
 from .models import Product, Category, Order
 from .forms import OrderForm
+
+logger = logging.getLogger(__name__)
 
 class ProductListView(ListView):
     model = Product
@@ -42,7 +53,6 @@ def order_detail(request, ref_no):
 
 def search(request):
     query = request.GET.get('q', '').strip()
-    # Order.objects.all().order_by('-created_at').delete()
 
     if query:
         products = Product.objects.filter(
@@ -60,35 +70,26 @@ def search(request):
     })
 
 
-from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse, HttpResponse
-from django.views.decorators.csrf import csrf_exempt
-from django.views.decorators.http import require_http_methods
-from django.core.mail import send_mail
-from django.conf import settings
-from django.contrib import messages
-from .models import Product, Order
-from .bkash_service import BkashService
-import json
-import logging
-
-logger = logging.getLogger(__name__)
 
 def checkout_page(request, product_id):
     product = get_object_or_404(Product, id=product_id)
     
     if request.method == 'POST':
+        customer_name = request.POST.get('name')
+        phone = request.POST.get('phone', "")
         email = request.POST.get('email')
         if email:
             # Create order
             order = Order.objects.create(
+                customer_name=customer_name,
+                phone = phone,
                 email=email,
                 product=product,
                 amount=product.price
             )
             return redirect('store:payment_page', order_id=order.id)
     
-    return render(request, 'store/checkout.html', {'product': product})
+    return render(request, 'store/checkout.html', {'product': product, 'form': OrderForm})
 
 def payment_page(request, order_id):
     order = get_object_or_404(Order, id=order_id)
@@ -126,7 +127,7 @@ def create_payment(request):
                 return JsonResponse({
                     'success': True,
                     'payment_id': payment_response.get('paymentID'),
-                    'bkash_url': payment_response.get('bkashURL')
+                    'bkash_url': payment_response.get('bkashURL'), 
                 })
             else:
                 return JsonResponse({
@@ -145,10 +146,9 @@ def create_payment(request):
 
 @csrf_exempt
 def execute_payment(request):
-    if request.method == 'POST':
+    if request.method == 'GET':
         try:
-            data = json.loads(request.body)
-            payment_id = data.get('payment_id')
+            payment_id = request.GET.get('paymentID')
             
             bkash_service = BkashService()
             execute_response = bkash_service.execute_payment(payment_id)
@@ -162,23 +162,14 @@ def execute_payment(request):
                     order.save()
                     
                     # Send email with download link
-                    send_ebook_email(order)
-                    
-                    return JsonResponse({
-                        'success': True,
-                        'trx_id': execute_response.get('trxID'),
-                        'order_id': str(order.id)
-                    })
+                    # send_ebook_email(order)
+                    return redirect('store:payment_success', order_id=order.id)
+
                 except Order.DoesNotExist:
-                    return JsonResponse({
-                        'success': False,
-                        'message': 'Order not found'
-                    })
+                    return redirect('store:payment_failed', message= 'Order not found')
+
             else:
-                return JsonResponse({
-                    'success': False,
-                    'message': 'Payment execution failed'
-                })
+                return redirect('store:payment_failed', message= 'Payment execution failed')
                 
         except Exception as e:
             logger.error(f"Payment execution error: {str(e)}")
@@ -191,13 +182,13 @@ def execute_payment(request):
 
 def send_ebook_email(order):
     try:
-        subject = f'Your eBook Purchase: {order.product.name}'
+        subject = f'Your eBook Purchase: {order.product.title}'
         download_link = f"http://localhost:8000/download/{order.id}/"  # Update with your domain
         
         message = f"""
         Thank you for your purchase!
         
-        Product: {order.product.name}
+        Product: {order.product.title}
         Order ID: {order.id}
         Amount: {order.amount} BDT
         Transaction ID: {order.trx_id}
@@ -208,7 +199,10 @@ def send_ebook_email(order):
         
         Thank you for your business!
         """
-        
+        print(subject,
+            message,
+            settings.EMAIL_HOST_USER,
+            [order.email])
         send_mail(
             subject,
             message,
@@ -226,24 +220,31 @@ def download_ebook(request, order_id):
         return HttpResponse('Payment not confirmed', status=403)
     
     # Serve the file
-    if order.product.ebook_file:
+    if order.product.pdf_file:
         response = HttpResponse(
-            order.product.ebook_file.read(),
+            order.product.pdf_file.read(),
             content_type='application/octet-stream'
         )
-        response['Content-Disposition'] = f'attachment; filename="{order.product.name}.pdf"'
+        response['Content-Disposition'] = f'attachment; filename="{order.product.title}.pdf"'
         return response
     
     return HttpResponse('File not found', status=404)
 
 def payment_success(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-    return render(request, 'payment_success.html', {'order': order})
+    return render(request, 'store/payment_success.html', {'order': order})
+
+def payment_failed(request, message):
+    return render(request, 'store/payment_failed.html', {'message': message})
 
 @csrf_exempt
 def payment_callback(request):
     # Handle bKash callback (optional)
-    if request.method == 'POST':
+    payment_id = request.GET.get('paymentID')
+            
+    bkash_service = BkashService()
+    execute_response = bkash_service.execute_payment(payment_id)
+    if request.method == "POST":
         # Process callback data
         pass
     return HttpResponse('OK')

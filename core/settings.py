@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'crispy_bootstrap5',
     'store',
     'users',
+    'markdownify.apps.MarkdownifyConfig',
 ]
 
 MIDDLEWARE = [
@@ -94,17 +95,16 @@ DATABASES = {
     }
 }
 
-from dotenv import load_dotenv
+from decouple import config
 
-load_dotenv()
 BKASH_CONFIG = {
-    'SANDBOX_BASE_URL': 'https://tokenized.sandbox.bka.sh/v1.2.0-beta/',
-    'PRODUCTION_BASE_URL': 'https://tokenized.pay.bka.sh/v1.2.0-beta',
-    'APP_KEY': '0vWQuCRGiUX7EPVjQDr0EUAYtc',
-    'APP_SECRET': 'jcUNPBgbcqEDedNKdvE4G1cAK7D3hCjmJccNPZZBq96QIxxwAMEx',
-    'USERNAME': '01770618567',
-    'PASSWORD': 'D7DaC<*E*eG',
-    'IS_SANDBOX': True,  # Set to False for production
+    'SANDBOX_BASE_URL': config("SANDBOX_BASE_URL"),
+    'PRODUCTION_BASE_URL': config("PRODUCTION_BASE_URL"),
+    'APP_KEY': config("APP_KEY"),
+    'APP_SECRET': config("APP_SECRET"),
+    'USERNAME': config("USERNAME"),
+    'PASSWORD': config("PASSWORD"),
+    'IS_SANDBOX': config("IS_SANDBOX"),  # Set to False for production
 }
 
 # Password validation
@@ -170,9 +170,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'your-email@gmail.com'
-EMAIL_HOST_PASSWORD = 'your-email-password'
-DEFAULT_FROM_EMAIL = 'বইঘর <your-email@gmail.com>'
+EMAIL_HOST = config('EMAIL_HOST')
+EMAIL_PORT = config('EMAIL_PORT')
+EMAIL_USE_TLS = config('EMAIL_USE_TLS')
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
+DEFAULT_FROM_EMAIL = config('DEFAULT_FROM_EMAIL')

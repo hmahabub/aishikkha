@@ -15,5 +15,5 @@ urlpatterns = [
     path('api/execute-payment/', execute_payment, name='execute_payment'),
     path('download/<uuid:order_id>/', download_ebook, name='download_ebook'),
     path('payment/success/<uuid:order_id>/', payment_success, name='payment_success'),
-    path('payment/callback/', payment_callback, name='payment_callback'),
+    path('payment/callback/', execute_payment, name='payment_callback'),
 ]

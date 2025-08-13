@@ -1,26 +1,56 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load markdownify %}
 
 {% block content %}
 <div class="row">
-    <div class="col-md-4">
-        {% if product.thumbnail %}
-        <img src="{{ product.thumbnail.url }}" class="img-fluid rounded" alt="{{ product.title }}">
-        {% else %}
-        <img src="{% static 'images/default-book.jpg' %}" class="img-fluid rounded" alt="{{ product.title }}">
-        {% endif %}
-    </div>
-    <div class="col-md-8">
+    <!-- Mobile-only header (visible on small screens) -->
+    <div class="col-12 d-md-none mb-3">
         <h2>{{ product.title }}</h2>
         <p class="text-muted">লেখক: {{ product.author }}</p>
-        <p class="text-success fw-bold fs-4">{{ product.price }} টাকা</p>
-        
+        <p class="text-dark fs-5">মূল্যঃ &nbsp; <s class="text-dark fs-5">{{ product.price |add:50}} </s> 
+        &nbsp; <b>{{ product.price }}</b> টাকা</p>
+        <a href="{% url 'store:checkout' product.pk %}" class="btn btn-primary btn-lg w-100 mb-3">Buy Now</a>
+    </div>
+    
+    <!-- PDF/Image column -->
+    <div class="col-md-4">
+        {% if product.sample_pdf_file %}
+            <div class="pdf-viewer-container">
+                <iframe src="{% static 'js/pdfjs/web/viewer.html' %}?file={{ product.sample_pdf_file.url|urlencode }}" 
+                        width="100%" 
+                        height="500px" 
+                        class="rounded border"
+                        title="PDF Viewer for {{ product.title }}">
+                </iframe>
+            </div>
+        {% elif product.thumbnail %}
+            <img src="{{ product.thumbnail.url }}" class="img-fluid rounded" alt="{{ product.title }}">
+        {% else %}
+            <img src="{% static 'images/default-book.jpg' %}" class="img-fluid rounded" alt="{{ product.title }}">
+        {% endif %}
+    </div>
+    
+    <!-- Product details column (hidden on mobile, shown on medium+ screens) -->
+    <div class="col-md-8 d-none d-md-block">
+        <h2>{{ product.title }}</h2>
+        <p class="text-muted">লেখক: {{ product.author }}</p>
+        <p class="text-success fs-5">মূল্যঃ &nbsp; <s class="text-dark fs-5">{{ product.price |add:50}} </s> 
+        &nbsp; <b>{{ product.price }}</b> টাকা</p>
+        <a href="{% url 'store:checkout' product.pk %}" class="btn btn-primary btn-md">Buy Now</a>
+        <p></p>
         <div class="mb-4">
             <h4>বিবরণ:</h4>
-            <p>{{ product.description }}</p>
+            <p>{{ product.description|markdownify|linebreaks }}</p>
         </div>
-        
-        <a href="{% url 'store:checkout' product.pk %}" class="btn btn-primary btn-lg">এখনই কিনুন</a>
+    </div>
+    
+    <!-- Mobile description (visible on small screens only) -->
+    <div class="col-12 d-md-none mt-3">
+        <div class="mb-4">
+            <h4>বিবরণ:</h4>
+            <p>{{ product.description|markdownify }}</p>
+        </div>
     </div>
 </div>
 {% endblock %}
