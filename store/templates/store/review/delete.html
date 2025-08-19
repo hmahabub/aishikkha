@@ -1,0 +1,381 @@
+<!-- templates/store/review/delete.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}রিভিউ মুছুন - {{ review.product.name }} - AiShikkha{% endblock %}
+
+{% block extra_css %}
+<style>
+    .delete-container {
+        background: linear-gradient(135deg, #f8d7da 0%, #f5c6cb 50%, #f1b0b7 100%);
+        min-height: 100vh;
+        padding: 60px 0;
+    }
+    
+    .delete-card {
+        border: none;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(220, 53, 69, 0.15);
+        overflow: hidden;
+        animation: slideIn 0.5s ease-out;
+    }
+    
+    @keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .card-header-danger {
+        background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
+        color: white;
+        padding: 25px;
+        text-align: center;
+    }
+    
+    .danger-icon {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        animation: pulse 2s infinite;
+    }
+    
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+        100% { transform: scale(1); }
+    }
+    
+    .review-preview {
+        background: #f8f9fa;
+        border: 2px solid #dee2e6;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px 0;
+        position: relative;
+    }
+    
+    .review-preview::before {
+        content: '';
+        position: absolute;
+        top: -2px;
+        left: -2px;
+        right: -2px;
+        bottom: -2px;
+        background: linear-gradient(45deg, #dc3545, #fd7e14, #ffc107);
+        border-radius: 15px;
+        z-index: -1;
+        opacity: 0.1;
+    }
+    
+    .product-info-delete {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        border: 1px solid #dee2e6;
+        margin-bottom: 20px;
+    }
+    
+    .star-display {
+        color: #ffc107;
+        font-size: 1.1rem;
+    }
+    
+    .btn-delete-confirm {
+        background: linear-gradient(45deg, #dc3545, #c82333);
+        border: none;
+        padding: 15px 40px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .btn-delete-confirm:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(220, 53, 69, 0.4);
+    }
+    
+    .btn-delete-confirm::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255,255,255,0.2);
+        transition: width 0.6s, height 0.6s, top 0.6s, left 0.6s;
+    }
+    
+    .btn-delete-confirm:hover::before {
+        width: 300px;
+        height: 300px;
+        top: -150px;
+        left: -150px;
+    }
+    
+    .btn-cancel-delete {
+        background: #6c757d;
+        border: none;
+        padding: 15px 40px;
+        border-radius: 30px;
+        font-weight: 600;
+        font-size: 1.1rem;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-cancel-delete:hover {
+        background: #5a6268;
+        transform: translateY(-3px);
+    }
+    
+    .warning-list {
+        background: #fff3cd;
+        border: 1px solid #ffeaa7;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 20px 0;
+    }
+    
+    .warning-list li {
+        margin-bottom: 8px;
+        display: flex;
+        align-items: flex-start;
+    }
+    
+    .warning-list i {
+        margin-right: 8px;
+        margin-top: 2px;
+        color: #856404;
+    }
+    
+    .confirmation-checkbox {
+        background: white;
+        border-radius: 10px;
+        padding: 15px;
+        margin: 20px 0;
+        border: 2px solid #dee2e6;
+        transition: border-color 0.3s ease;
+    }
+    
+    .confirmation-checkbox:has(input:checked) {
+        border-color: #dc3545;
+        background: #fff5f5;
+    }
+    
+    .form-check-input:checked {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="delete-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card delete-card">
+                    <div class="card-header-danger">
+                        <div class="danger-icon">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3 class="mb-0">রিভিউ মুছে ফেলার নিশ্চিতকরণ</h3>
+                        <p class="mb-0 mt-2 opacity-75">এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না</p>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <!-- Product Information -->
+                        <div class="product-info-delete">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    {% if review.product.image %}
+                                        <img src="{{ review.product.image.url }}" class="img-fluid rounded" alt="{{ review.product.name }}">
+                                    {% else %}
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 80px;">
+                                            <i class="fas fa-book fa-2x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-10">
+                                    <h5 class="mb-1">{{ review.product.name }}</h5>
+                                    <p class="text-muted mb-0">লেখক: {{ review.product.author }}</p>
+                                    <small class="text-muted">মূল্য: ৳{{ review.product.price }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Review Preview -->
+                        <div class="review-preview">
+                            <h6 class="text-danger mb-3">
+                                <i class="fas fa-trash me-2"></i>যে রিভিউটি মুছে ফেলা হবে:
+                            </h6>
+                            
+                            <div class="d-flex justify-content-between align-items-start mb-3">
+                                <div>
+                                    <h6 class="mb-1">{{ review.name }}</h6>
+                                    <div class="star-display mb-2">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                        <span class="ms-2 text-muted">({{ review.rating }}/5)</span>
+                                    </div>
+                                </div>
+                                <div class="text-end">
+                                    <small class="text-muted">{{ review.created_at|date:"d F, Y" }}</small>
+                                    <br>
+                                    {% if review.status == 'pending' %}
+                                        <span class="badge bg-warning">অনুমোদনের অপেক্ষায়</span>
+                                    {% elif review.status == 'approved' %}
+                                        <span class="badge bg-success">অনুমোদিত</span>
+                                    {% else %}
+                                        <span class="badge bg-danger">প্রত্যাখ্যাত</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            
+                            {% if review.title %}
+                                <h6 class="fw-bold">{{ review.title }}</h6>
+                            {% endif %}
+                            
+                            <p class="mb-0">{{ review.comment|truncatewords:50 }}</p>
+                            
+                            {% if review.comment|wordcount > 50 %}
+                                <button class="btn btn-link btn-sm p-0 mt-2" type="button" data-bs-toggle="collapse" data-bs-target="#fullReview">
+                                    সম্পূর্ণ রিভিউ দেখুন
+                                </button>
+                                <div class="collapse mt-2" id="fullReview">
+                                    <p class="small text-muted">{{ review.comment|linebreaks }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Warning List -->
+                        <div class="warning-list">
+                            <h6 class="text-warning mb-3">
+                                <i class="fas fa-exclamation-triangle me-2"></i>গুরুত্বপূর্ণ সতর্কতা:
+                            </h6>
+                            <ul class="list-unstyled mb-0">
+                                <li>
+                                    <i class="fas fa-times-circle text-danger"></i>
+                                    এই রিভিউটি স্থায়ীভাবে মুছে যাবে এবং পুনরুদ্ধার করা যাবে না
+                                </li>
+                                <li>
+                                    <i class="fas fa-chart-line text-warning"></i>
+                                    বইটির গড় রেটিং প্রভাবিত হতে পারে
+                                </li>
+                                <li>
+                                    <i class="fas fa-users text-info"></i>
+                                    অন্য পাঠকরা আপনার মূল্যবান মতামত দেখতে পাবেন না
+                                </li>
+                                <li>
+                                    <i class="fas fa-redo text-success"></i>
+                                    পরবর্তীতে নতুন রিভিউ লিখতে পারবেন
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Confirmation Form -->
+                        <form method="post" id="deleteForm">
+                            {% csrf_token %}
+                            
+                            <div class="confirmation-checkbox">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="confirmDelete" required>
+                                    <label class="form-check-label fw-bold" for="confirmDelete">
+                                        আমি নিশ্চিত যে এই রিভিউটি স্থায়ীভাবে মুছে ফেলতে চাই
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="d-flex justify-content-between align-items-center">
+                                <a href="{% url 'store:product_detail' review.product.id %}" 
+                                   class="btn btn-cancel-delete text-white">
+                                    <i class="fas fa-arrow-left me-2"></i>ফিরে যান
+                                </a>
+                                
+                                <div class="d-flex gap-2">
+                                    <a href="{% url 'store:edit_review' review.id %}" 
+                                       class="btn btn-outline-primary">
+                                        <i class="fas fa-edit me-2"></i>সম্পাদনা করুন
+                                    </a>
+                                    
+                                    <button type="submit" 
+                                            class="btn btn-delete-confirm text-white" 
+                                            id="deleteButton"
+                                            disabled>
+                                        <i class="fas fa-trash me-2"></i>স্থায়ীভাবে মুছুন
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Alternative Actions -->
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <h6 class="card-title">
+                            <i class="fas fa-lightbulb me-2"></i>বিকল্প সমাধান
+                        </h6>
+                        <p class="text-muted small">
+                            রিভিউ মুছে ফেলার পরিবর্তে আপনি চাইলে এটি সম্পাদনা করতে পারেন। 
+                            এতে করে আপনার মূল্যবান মতামত অন্য পাঠকদের কাজে আসবে।
+                        </p>
+                        <a href="{% url 'store:edit_review' review.id %}" class="btn btn-outline-success btn-sm">
+                            <i class="fas fa-edit me-1"></i>রিভিউ সম্পাদনা করুন
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock%}
+{% block extra_js %}
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const confirmCheckbox = document.getElementById('confirmDelete');
+    const deleteButton = document.getElementById('deleteButton');
+    const deleteForm = document.getElementById('deleteForm');
+    
+    // Enable/disable delete button based on checkbox
+    confirmCheckbox.addEventListener('change', function() {
+        deleteButton.disabled = !this.checked;
+        
+        if (this.checked) {
+            deleteButton.classList.add('enabled');
+        } else {
+            deleteButton.classList.remove('enabled');
+        }
+    });
+    
+    // Double confirmation on form submit
+    deleteForm.addEventListener('submit', function(e) {
+        if (!confirm('আপনি কি সত্যিই এই রিভিউটি স্থায়ীভাবে মুছে ফেলতে চান? এই কাজটি পূর্বাবস্থায় ফেরানো যাবে না।')) {
+            e.preventDefault();
+        }
+    });
+    
+    // Add loading state to delete button
+    deleteButton.addEventListener('click', function() {
+        if (!this.disabled && confirmCheckbox.checked) {
+            this.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>মুছে ফেলা হচ্ছে...';
+            this.disabled = true;
+        }
+    });
+});
+</script>
+{% endblock %}

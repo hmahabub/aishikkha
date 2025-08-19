@@ -4,9 +4,16 @@ from .views import *
 app_name = 'store'
 
 urlpatterns = [
-    path('', ProductListView.as_view(), name='product_list'),
+    path('', HomePageView.as_view(), name='home'),
+    path('product', ProductListView.as_view(), name='product_list'),
     path('category/<slug:category_slug>/', ProductListView.as_view(), name='product_list_by_category'),
-    path('product/<int:pk>/', ProductDetailView.as_view(), name='product_detail'),
+    path('product/<int:id>/', product_detail, name='product_detail'),
+    path('product/<int:id>/<slug:slug>/', product_detail, name='product_detail'),
+    path('review/add/<int:product_id>/', add_review, name='add_review'),
+    path('review/edit/<int:review_id>/', edit_review, name='edit_review'),
+    path('review/delete/<int:review_id>/', delete_review, name='delete_review'),
+    path('ajax/reviews/<int:product_id>/', get_reviews_ajax, name='get_reviews_ajax'),
+
     path('order/<str:ref_no>/', order_detail, name='order_detail'),
     path('search/', search, name='search'),
     path('checkout/<int:product_id>/', checkout_page, name='checkout'),

@@ -1,0 +1,273 @@
+<!-- templates/store/review/edit.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}রিভিউ সম্পাদনা - {{ product.name }} - AiShikkha{% endblock %}
+
+{% block extra_css %}
+<style>
+    .review-edit-container {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+        padding: 40px 0;
+    }
+    
+    .edit-card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        overflow: hidden;
+    }
+    
+    .card-header-custom {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border: none;
+    }
+    
+    .product-info {
+        background: #f8f9fa;
+        border-radius: 10px;
+        padding: 15px;
+        margin-bottom: 20px;
+    }
+    
+    .form-control:focus, .form-select:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .btn-save {
+        background: linear-gradient(45deg, #28a745, #20c997);
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+    }
+    
+    .btn-cancel {
+        background: #6c757d;
+        border: none;
+        padding: 12px 30px;
+        border-radius: 25px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-cancel:hover {
+        background: #5a6268;
+        transform: translateY(-2px);
+    }
+    
+    .star-rating {
+        font-size: 1.2rem;
+        color: #ffc107;
+    }
+    
+    .current-rating {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        background: white;
+        padding: 10px;
+        border-radius: 8px;
+        border: 1px solid #dee2e6;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="review-edit-container">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <div class="card edit-card">
+                    <div class="card-header-custom">
+                        <h4 class="mb-0">
+                            <i class="fas fa-edit me-2"></i>রিভিউ সম্পাদনা করুন
+                        </h4>
+                    </div>
+                    
+                    <div class="card-body p-4">
+                        <!-- Product Information -->
+                        <div class="product-info">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    {% if product.image %}
+                                        <img src="{{ product.image.url }}" class="img-fluid rounded" alt="{{ product.name }}">
+                                    {% else %}
+                                        <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 80px;">
+                                            <i class="fas fa-book fa-2x text-muted"></i>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="col-md-10">
+                                    <h5 class="mb-1">{{ product.name }}</h5>
+                                    <p class="text-muted mb-0">লেখক: {{ product.author }}</p>
+                                    <small class="text-muted">মূল্য: ৳{{ product.price }}</small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Current Review Status -->
+                        <div class="alert alert-info mb-4">
+                            <div class="d-flex align-items-center">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <div>
+                                    <strong>বর্তমান অবস্থা:</strong>
+                                    {% if review.status == 'pending' %}
+                                        <span class="badge bg-warning ms-2">অনুমোদনের অপেক্ষায়</span>
+                                    {% elif review.status == 'approved' %}
+                                        <span class="badge bg-success ms-2">অনুমোদিত</span>
+                                    {% else %}
+                                        <span class="badge bg-danger ms-2">প্রত্যাখ্যাত</span>
+                                    {% endif %}
+                                </div>
+            </div>
+                            <small class="d-block mt-2 text-muted">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                রিভিউ সম্পাদনা করার পর এটি পুনরায় অনুমোদনের জন্য পাঠানো হবে।
+                            </small>
+                        </div>
+
+                        <!-- Edit Form -->
+                        <form method="post">
+                            {% csrf_token %}
+                            
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.name.id_for_label }}" class="form-label">
+                                        <i class="fas fa-user me-1"></i>আপনার নাম <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.name }}
+                                    {% if form.name.errors %}
+                                        <div class="text-danger small mt-1">{{ form.name.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.email.id_for_label }}" class="form-label">
+                                        <i class="fas fa-envelope me-1"></i>ইমেইল <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.email }}
+                                    {% if form.email.errors %}
+                                        <div class="text-danger small mt-1">{{ form.email.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.rating.id_for_label }}" class="form-label">
+                                        <i class="fas fa-star me-1"></i>রেটিং <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.rating }}
+                                    
+                                    <!-- Current Rating Display -->
+                                    <div class="current-rating mt-2">
+                                        <span class="small text-muted">বর্তমান রেটিং:</span>
+                                        <div class="star-rating">
+                                            {% for i in "12345" %}
+                                                {% if forloop.counter <= review.rating %}
+                                                    <i class="fas fa-star"></i>
+                                                {% else %}
+                                                    <i class="far fa-star"></i>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </div>
+                                        <span class="small">{{ review.rating }}/5</span>
+                                    </div>
+                                    
+                                    {% if form.rating.errors %}
+                                        <div class="text-danger small mt-1">{{ form.rating.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="col-md-6 mb-3">
+                                    <label for="{{ form.title.id_for_label }}" class="form-label">
+                                        <i class="fas fa-heading me-1"></i>রিভিউ শিরোনাম <span class="text-danger">*</span>
+                                    </label>
+                                    {{ form.title }}
+                                    {% if form.title.errors %}
+                                        <div class="text-danger small mt-1">{{ form.title.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="{{ form.comment.id_for_label }}" class="form-label">
+                                    <i class="fas fa-comment me-1"></i>বিস্তারিত রিভিউ <span class="text-danger">*</span>
+                                </label>
+                                {{ form.comment }}
+                                <div class="form-text">
+                                    <i class="fas fa-lightbulb me-1"></i>
+                                    আপনার অভিজ্ঞতা, বইটির ভালো-মন্দ দিক এবং অন্যদের জন্য পরামর্শ লিখুন।
+                                </div>
+                                {% if form.comment.errors %}
+                                    <div class="text-danger small mt-1">{{ form.comment.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+
+                            <div class="d-flex justify-content-between">
+                                <a href="{% url 'store:product_detail' product.id %}" class="btn btn-cancel text-white">
+                                    <i class="fas fa-times me-2"></i>বাতিল
+                                </a>
+                                
+                                <button type="submit" class="btn btn-save text-white">
+                                    <i class="fas fa-save me-2"></i>রিভিউ আপডেট করুন
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Help Section -->
+                <div class="card mt-4">
+                    <div class="card-body">
+                        <h6 class="card-title">
+                            <i class="fas fa-question-circle me-2"></i>সাহায্য
+                        </h6>
+                        <ul class="small text-muted mb-0">
+                            <li>রিভিউ সম্পাদনার পর এটি পুনরায় অ্যাডমিন অনুমোদনের জন্য যাবে</li>
+                            <li>অনুমোদিত রিভিউ ওয়েবসাইটে প্রদর্শিত হবে</li>
+                            <li>সৎ এবং গঠনমূলক রিভিউ লিখুন</li>
+                            <li>অন্যান্য পাঠকদের সাহায্য করার জন্য বিস্তারিত তথ্য দিন</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+// Dynamic star rating preview
+document.addEventListener('DOMContentLoaded', function() {
+    const ratingSelect = document.getElementById('{{ form.rating.id_for_label }}');
+    const currentRating = document.querySelector('.current-rating .star-rating');
+    
+    ratingSelect.addEventListener('change', function() {
+        const rating = parseInt(this.value) || 0;
+        const stars = currentRating.querySelectorAll('i');
+        
+        stars.forEach((star, index) => {
+            if (index < rating) {
+                star.className = 'fas fa-star';
+            } else {
+                star.className = 'far fa-star';
+            }
+        });
+        
+        // Update rating text
+        const ratingText = currentRating.nextElementSibling;
+        ratingText.textContent = rating + '/5';
+    });
+});
+{% endblock %}

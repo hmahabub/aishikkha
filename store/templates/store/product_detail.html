@@ -1,6 +1,8 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load markdownify %}
+{% load math_filters %}
+
 
 {% block content %}
 <div class="row">
@@ -8,6 +10,38 @@
     <div class="col-12 d-md-none mb-3">
         <h2>{{ product.title }}</h2>
         <p class="text-muted">লেখক: {{ product.author }}</p>
+               <!-- Rating Display -->
+        {% if rating_stats.count > 0 %}
+            <div class="mb-3">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="text-warning me-2">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= rating_stats.average|floatformat:0 %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="h5 mb-0">{{ rating_stats.average }}/5</span>
+                    <small class="text-muted ms-2">({{ rating_stats.count }} রিভিউ)</small>
+                </div>
+                
+                <!-- Rating Distribution -->
+                <div class="rating-distribution">
+                    {% for rating, count in rating_stats.distribution.items %}
+                        <div class="d-flex align-items-center mb-1">
+                            <small class="me-2">{{ rating }} স্টার</small>
+                            <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                <div class="progress-bar bg-warning" 
+                                     style="width: {% if rating_stats.count > 0 %}{{ count|mul:100|div:rating_stats.count }}{% else %}0{% endif %}%"></div>
+                            </div>
+                            <small class="text-muted">{{ count }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
         <p class="text-dark fs-5">মূল্যঃ &nbsp; <s class="text-dark fs-5">{{ product.price |add:50}} </s> 
         &nbsp; <b>{{ product.price }}</b> টাকা</p>
         <a href="{% url 'store:checkout' product.pk %}" class="btn btn-primary btn-lg w-100 mb-3">Buy Now</a>
@@ -35,6 +69,37 @@
     <div class="col-md-8 d-none d-md-block">
         <h2>{{ product.title }}</h2>
         <p class="text-muted">লেখক: {{ product.author }}</p>
+        {% if rating_stats.count > 0 %}
+            <div class="mb-3">
+                <div class="d-flex align-items-center mb-2">
+                    <div class="text-warning me-2">
+                        {% for i in "12345" %}
+                            {% if forloop.counter <= rating_stats.average|floatformat:0 %}
+                                <i class="fas fa-star"></i>
+                            {% else %}
+                                <i class="far fa-star"></i>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                    <span class="h5 mb-0">{{ rating_stats.average }}/5</span>
+                    <small class="text-muted ms-2">({{ rating_stats.count }} রিভিউ)</small>
+                </div>
+                
+                <!-- Rating Distribution -->
+                <div class="rating-distribution">
+                    {% for rating, count in rating_stats.distribution.items %}
+                        <div class="d-flex align-items-center mb-1">
+                            <small class="me-2">{{ rating }} স্টার</small>
+                            <div class="progress flex-grow-1 me-2" style="height: 8px;">
+                                <div class="progress-bar bg-warning" 
+                                     style="width: {% if rating_stats.count > 0 %}{{ count|mul:100|div:rating_stats.count }}{% else %}0{% endif %}%"></div>
+                            </div>
+                            <small class="text-muted">{{ count }}</small>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endif %}
         <p class="text-success fs-5">মূল্যঃ &nbsp; <s class="text-dark fs-5">{{ product.price |add:50}} </s> 
         &nbsp; <b>{{ product.price }}</b> টাকা</p>
         <a href="{% url 'store:checkout' product.pk %}" class="btn btn-primary btn-md">Buy Now</a>
@@ -53,4 +118,133 @@
         </div>
     </div>
 </div>
+
+<!-- Reviews Section -->
+<div class="row mt-5">
+    <div class="col-12">
+        <h3 class="mb-4">গ্রাহকদের রিভিউ</h3>
+        
+        <!-- Review Form -->
+            {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-info">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <strong>{{message}}</strong> 
+                        </div>
+                    </div>
+                </div>
+              {% endfor %}
+            {% elif not user_has_reviewed %}
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">আপনার রিভিউ লিখুন</h5>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="{% url 'store:add_review' product.id %}">
+                            {% csrf_token %}
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ review_form.name.label_tag }}
+                                    {{ review_form.name }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ review_form.email.label_tag }}
+                                    {{ review_form.email }}
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    {{ review_form.rating.label_tag }}
+                                    {{ review_form.rating }}
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    {{ review_form.title.label_tag }}
+                                    {{ review_form.title }}
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                {{ review_form.comment.label_tag }}
+                                {{ review_form.comment }}
+                            </div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane me-2"></i>রিভিউ জমা দিন
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            
+            {% endif %}
+        
+        <!-- Reviews List -->
+        <div id="reviews-container">
+            {% if reviews %}
+                {% for review in reviews %}
+                    <div class="card mb-3 review-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div>
+                                    <h6 class="mb-1">{{ review.name }}</h6>
+                                    <div class="text-warning mb-1">
+                                        {% for i in "12345" %}
+                                            {% if forloop.counter <= review.rating %}
+                                                <i class="fas fa-star"></i>
+                                            {% else %}
+                                                <i class="far fa-star"></i>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <small class="text-muted">{{ review.created_at|date:"d F, Y" }}</small>
+                            </div>
+                            
+                            {% if review.title %}
+                                <h6 class="card-title">{{ review.title }}</h6>
+                            {% endif %}
+                            <p class="card-text">{{ review.comment|linebreaks }}</p>
+                        </div>
+                    </div>
+                {% endfor %}
+                
+                <!-- Pagination -->
+                {% if reviews.has_other_pages %}
+                    <nav aria-label="Reviews pagination">
+                        <ul class="pagination justify-content-center">
+                            {% if reviews.has_previous %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ reviews.previous_page_number }}">পূর্ববর্তী</a>
+                                </li>
+                            {% endif %}
+                            
+                            {% for num in reviews.paginator.page_range %}
+                                {% if reviews.number == num %}
+                                    <li class="page-item active">
+                                        <span class="page-link">{{ num }}</span>
+                                    </li>
+                                {% else %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                    </li>
+                                {% endif %}
+                            {% endfor %}
+                            
+                            {% if reviews.has_next %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ reviews.next_page_number }}">পরবর্তী</a>
+                                </li>
+                            {% endif %}
+                        </ul>
+                    </nav>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-light text-center">
+                    <i class="fas fa-comments fa-3x text-muted mb-3"></i>
+                    <h5>এখনো কোনো রিভিউ নেই</h5>
+                    <p class="text-muted">এই বইটির জন্য প্রথম রিভিউ লিখুন!</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
 {% endblock %}
