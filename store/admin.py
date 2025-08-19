@@ -31,7 +31,7 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = [
-        'product_name', 'title', 'rating_display', 
+        'title', 'product_name', 'rating_display', 
         'status_display', 'created_at', 'action_buttons'
     ]
     list_filter = ['status', 'rating', 'created_at', 'product']

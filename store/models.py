@@ -18,13 +18,14 @@ class Category(models.Model):
 
 class Product(models.Model):
     title = models.CharField(_("Title"), max_length=200)
-    author = models.CharField(_("Writer"), max_length=100)
+    author = models.CharField(_("Author"), max_length=100)
     description = models.TextField(_("Description"))
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name=_("Category"))
+    original_price = models.DecimalField(_("original_price"), max_digits=10, decimal_places=2, default=500)
     price = models.DecimalField(_("price"), max_digits=10, decimal_places=2)
     pdf_file = models.FileField(_("PDF File"), upload_to='pdfs/')
     sample_pdf_file = models.FileField(_(" Sample PDF File"), upload_to='sample_pdfs/')
-    thumbnail = models.ImageField(_("Thumbnail(200pxX200px)"), upload_to='thumbnails/', null=True, blank=True)
+    thumbnail = models.ImageField(_("Thumbnail(250pxX200px)"), upload_to='thumbnails/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
@@ -42,7 +43,11 @@ class Product(models.Model):
                 models.Avg('rating')
             )['rating__avg'], 1)
         return 0
-    
+
+    def get_star_display(self):
+        """Return stars for template display"""
+        return '★' * round(self.get_average_rating()) + '☆' * (5 - round(self.get_average_rating()))
+
     def get_rating_count(self):
         """Get count of approved reviews"""
         return self.reviews.filter(status='approved').count()
@@ -124,6 +129,7 @@ class Order(models.Model):
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
     bkash_payment_id = models.CharField(max_length=100, blank=True, null=True)
     trx_id = models.CharField(max_length=100, blank=True, null=True)
+    downloads = models.IntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     

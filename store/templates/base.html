@@ -28,12 +28,13 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
         .btn-primary {
-            background-color: #e91e63;
-            border-color: #e91e63;
+            background-color: #E64A19;
+            border-color: #E64A19;
         }
         .btn-primary:hover {
-            background-color: #e91e63;
-            border-color: #e91e63;
+            background-color: #ffffff;
+            border-color: #E64A19;
+            color: #E64A19;
         }
 
         .bg-2c3e50{
@@ -118,18 +119,58 @@
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #e91e63;
+            border-bottom: 2px solid #E64A19;
         }
         .product-name {
             font-size: 24px;
             color: #333;
             margin-bottom: 10px;
         }
-        .product-price {
-            font-size: 28px;
-            color: #e91e63;
-            font-weight: bold;
-        }
+
+            /* Products Section */
+    .products-section {
+        padding: 80px 0;
+        background: #f8f9fa;
+    }
+    
+    .section-title {
+        font-size: 2.5rem;
+        font-weight: 700;
+        text-align: center;
+        margin-bottom: 3rem;
+        color: #333;
+    }
+    
+    .product-card {
+        border: none;
+        border-radius: 15px;
+        overflow: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        margin-bottom: 2rem;
+    }
+    
+    .product-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .product-image {
+        height: 250px;
+        object-fit: cover;
+        width: 100%;
+    }
+    
+    .product-price {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #007bff;
+    }
+    
+    .product-rating {
+        color: #ffc107;
+        margin-bottom: 1rem;
+    }
         .form-group {
             margin-bottom: 20px;
         }
@@ -148,13 +189,13 @@
             box-sizing: border-box;
         }
         .form-group input:focus {
-            border-color: #e91e63;
+            border-color: #E64A19;
             outline: none;
         }
         .checkout-btn {
             width: 100%;
             padding: 15px;
-            background-color: #e91e63;
+            background-color: #E64A19;
             color: white;
             border: none;
             border-radius: 5px;
@@ -162,8 +203,11 @@
             cursor: pointer;
             transition: background-color 0.3s;
         }
+
         .checkout-btn:hover {
-            background-color: #c2185b;
+            background-color: #ffffff;
+            border: 1px solid #E64A19;
+            color: #E64A19;
         }
 
         @keyframes pulse {
@@ -200,7 +244,7 @@
             margin-bottom: 10px;
         }
         .total {
-            border-top: 2px solid #e91e63;
+            border-top: 2px solid #E64A19;
             padding-top: 10px;
             font-weight: bold;
             font-size: 18px;
@@ -402,6 +446,7 @@
                     <h5>Connect With Us</h5>
                     <ul class="list-unstyled">
                         <li>Email : <a href="mailto:admin@aishikkha.com" class="text-white">admin@aishikkha.com</a></li>
+                        <li> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;   <a href="mailto:aishikkha.bd@gmail.com" class="text-white">aishikkha.bd@gmail.com</a></li>
                         <li>Phone : <a href="#" class="text-white">01521400156</a></li>
                     </ul>
                     <a href="https://tinyurl.com/AiShikkhapage" class="text-white me-2"><i class="fa-brands fa-facebook"></i></i></a>
