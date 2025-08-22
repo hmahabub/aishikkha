@@ -284,7 +284,6 @@ def payment_page(request, order_id):
 
 @csrf_exempt
 def create_payment(request):
-    print("checkpoint 0")
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
@@ -296,7 +295,6 @@ def create_payment(request):
                 amount=float(order.amount),
                 invoice_number=str(order.id)
             )
-            print(payment_response.get('statusCode'))
             if payment_response and payment_response.get('statusCode') == '0000':
                 order.bkash_payment_id = payment_response.get('paymentID')
                 order.save()
@@ -313,7 +311,6 @@ def create_payment(request):
                 })
                 
         except Exception as e:
-            print("checkpoint 2")
             logger.error(f"Payment creation error: {str(e)}")
             return JsonResponse({
                 'success': False,
@@ -377,10 +374,6 @@ def send_ebook_email(order):
         
         Thank you for your business!
         """
-        print(subject,
-            message,
-            settings.EMAIL_HOST_USER,
-            [order.email])
         send_mail(
             subject,
             message,
@@ -398,16 +391,12 @@ def download_ebook(request, order_id):
         return HttpResponse('Payment not confirmed', status=403)
     
     # Serve the file
-    if order.product.pdf_file:
-        response = FileResponse(
-            order.product.pdf_file.open('rb'),
-            content_type='application/pdf',
-            as_attachment=True,
-            filename=f"{order.product.title}.pdf"
-        )
-        return response
+    if order.product.drive_link:
+        order.downloads += 1
+        order.save()
+        return redirect(order.product.drive_link)
     
-    return HttpResponse('File not found', status=404)
+    return HttpResponse('File not found. Please contact with AiShikkha', status=404)
 
 def payment_success(request, order_id):
     order = get_object_or_404(Order, id=order_id)

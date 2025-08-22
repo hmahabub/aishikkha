@@ -23,7 +23,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name=_("Category"))
     original_price = models.DecimalField(_("original_price"), max_digits=10, decimal_places=2, default=500)
     price = models.DecimalField(_("price"), max_digits=10, decimal_places=2)
-    pdf_file = models.FileField(_("PDF File"), upload_to='pdfs/')
+    drive_link = models.URLField(blank=True, null=True)
     sample_pdf_file = models.FileField(_(" Sample PDF File"), upload_to='sample_pdfs/')
     thumbnail = models.ImageField(_("Thumbnail(250pxX200px)"), upload_to='thumbnails/', null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

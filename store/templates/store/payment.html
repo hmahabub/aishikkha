@@ -1,7 +1,45 @@
 <!-- templates/payment.html -->
 {% extends "base.html" %}
 {% block title %}Payment - {{ order.product.title }}{% endblock %}
+{% block extra_css %} 
+        .bkash-btn {
+            width: 100%;
+            padding: 15px;
+            background-color: #e2136e;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background-color 0.3s;
+        }
+        .bkash-btn:hover {
+            background-color: #c2185b;
+        }
+        .bkash-btn:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
 
+        .loading {
+            display: none;
+        }
+        .bkash-logo {
+            width: 30px;
+            height: 30px;
+            background: white;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: #e2136e;
+        }
+{% endblock %}
 {% block content %}
     <div class="payment-container">
         <h2>Complete Your Payment</h2>
