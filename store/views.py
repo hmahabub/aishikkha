@@ -23,6 +23,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 
+from .utils.telegram import send_telegram_message
+
 
 from .models import Product, Category, Order, Review
 from .forms import OrderForm
@@ -342,6 +344,9 @@ def execute_payment(request):
                     
                     # Send email with download link
                     send_ebook_email_async(order)
+                    # Prepare Telegram message
+                    message = f"✅ Payment Successful!\nOrder ID: {order.id}\nCustomer: {order.customer_name}\nEmail: {order.email}\nAmount: {order.amount}"
+                    send_telegram_message(message)
                     return redirect('store:payment_success', order_id=order.id)
 
                 except Order.DoesNotExist:
@@ -388,6 +393,7 @@ def send_ebook_email(order):
 
 def send_ebook_email_async(order):
     """Send the email asynchronously using threading."""
+    print("Ebook Email sending Process started")
     thread = threading.Thread(
         target=send_ebook_email,
         args=(order,)
@@ -413,6 +419,9 @@ def payment_success(request, order_id):
     return render(request, 'store/payment_success.html', {'order': order})
 
 def payment_failed(request, message):
+    # Send Telegram message
+    telegram_message = f"❌ Payment Failed!\nReason: {message}"
+    send_telegram_message(telegram_message)
     return render(request, 'store/payment_failed.html', {'message': message})
 
 @csrf_exempt
