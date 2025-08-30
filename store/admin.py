@@ -60,7 +60,7 @@ class ReviewAdmin(admin.ModelAdmin):
     def product_name(self, obj):
         """Display product name with link"""
         url = reverse('admin:store_review_change', args=[obj.id])
-        return format_html('<a href="{}">{}</a>', url, obj.product.email)
+        return format_html('<a href="{}">{}</a>', url, obj.product.title)
     product_name.short_description = 'Product'
     
     
