@@ -21,7 +21,7 @@ class OrderForm(forms.ModelForm):
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['name', 'email', 'rating', 'title', 'comment']
+        fields = ['name', 'email', 'rating', 'comment']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
@@ -33,10 +33,6 @@ class ReviewForm(forms.ModelForm):
             }),
             'rating': forms.Select(attrs={
                 'class': 'form-select'
-            }),
-            'title': forms.TextInput(attrs={
-                'class': 'form-control',
-                'placeholder': 'রিভিউ শিরোনাম'
             }),
             'comment': forms.Textarea(attrs={
                 'class': 'form-control',

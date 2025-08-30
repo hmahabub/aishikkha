@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="x-apple-disable-message-reformatting" />
+  <meta name="format-detection" content="telephone=no, date=no, address=no, email=no" />
+  <title>Welcome to AiShikkha</title>
+  <!--[if mso]>
+  <noscript>
+    <xml>
+      <o:OfficeDocumentSettings>
+        <o:AllowPNG/>
+        <o:PixelsPerInch>96</o:PixelsPerInch>
+      </o:OfficeDocumentSettings>
+    </xml>
+  </noscript>
+  <![endif]-->
+  <style>
+    /* Reset */
+    html, body { margin:0 !important; padding:0 !important; height:100% !important; width:100% !important; }
+    * { -ms-text-size-adjust:100%; -webkit-text-size-adjust:100%; }
+    table, td { mso-table-lspace:0pt !important; mso-table-rspace:0pt !important; }
+    table { border-spacing:0 !important; border-collapse:collapse !important; table-layout:fixed !important; margin:0 auto !important; }
+    img { -ms-interpolation-mode:bicubic; border:0; line-height:100%; outline:none; text-decoration:none; height:auto; max-width:100%; }
+    a { text-decoration:none; }
+    .hover-underline:hover { text-decoration:underline !important; }
+
+    /* Container */
+    .email-container { width:100%; background:#f3f5f9; }
+    .container { width:100%; max-width:600px; margin:0 auto; }
+
+    /* Utilities */
+    .px-24 { padding-left:24px; padding-right:24px; }
+    .py-24 { padding-top:24px; padding-bottom:24px; }
+    .pt-8  { padding-top:8px; }
+    .pt-16 { padding-top:16px; }
+    .pt-24 { padding-top:24px; }
+    .pb-8  { padding-bottom:8px; }
+    .pb-16 { padding-bottom:16px; }
+    .pb-24 { padding-bottom:24px; }
+    .text-center { text-align:center; }
+
+    /* Type */
+    .brand { font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+    .h1 { font-size:28px; line-height:1.25; margin:0; font-weight:700; color:#0f172a; }
+    .h2 { font-size:20px; line-height:1.4; margin:0; font-weight:600; color:#0f172a; }
+    .body { font-size:16px; line-height:1.6; margin:0; color:#334155; }
+    .muted { font-size:13px; line-height:1.5; color:#64748b; }
+
+    /* Card */
+    .card { background:#ffffff; border-radius:16px; box-shadow:0 2px 8px rgba(2,6,23,.06); }
+
+    /* Buttons */
+    .btn { display:inline-block; padding:14px 22px; border-radius:999px; font-weight:600; font-size:16px; line-height:1; }
+    .btn-primary { background:#2563eb; color:#ffffff; }
+    .btn-secondary { background:#f1f5f9; color:#0f172a; }
+
+    /* Divider */
+    .divider { height:1px; background:#e5e7eb; line-height:1px; font-size:0; }
+
+    /* Dark mode (partial support across clients) */
+    @media (prefers-color-scheme: dark) {
+      .email-container { background:#0b1020 !important; }
+      .card { background:#0f172a !important; }
+      .h1, .h2 { color:#e5e7eb !important; }
+      .body { color:#cbd5e1 !important; }
+      .muted { color:#94a3b8 !important; }
+      .btn-secondary { background:#111827 !important; color:#e5e7eb !important; }
+      .divider { background:#1f2937 !important; }
+    }
+
+    /* Mobile tweaks */
+    @media screen and (max-width: 600px) {
+      .px-24 { padding-left:16px !important; padding-right:16px !important; }
+      .py-24 { padding-top:20px !important; padding-bottom:20px !important; }
+      .h1 { font-size:24px !important; }
+      .h2 { font-size:18px !important; }
+      .btn { width:100% !important; text-align:center !important; }
+    }
+  </style>
+</head>
+<body class="brand" style="background:#f3f5f9;">
+  <!-- Visually Hidden Preheader Text -->
+  <div style="display:none; max-height:0; overflow:hidden; mso-hide:all;">
+    Welcome to AiShikkha! Your ebook download link is inside. Join our WhatsApp & Facebook community for free sessions and updates.
+  </div>
+
+  <center role="article" aria-roledescription="email" lang="en" class="email-container">
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
+      <tr>
+        <td class="px-24 py-24">
+
+          <!-- Header / Brand -->
+          <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td class="text-center pb-16">
+                <a href="{{website_url}}" target="_blank" style="font-weight:800; font-size:22px; color:#0f172a; letter-spacing:.3px;">
+                  AiShikkha
+                </a>
+                <div class="muted pt-8">Learn smarter with AI</div>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Card -->
+          <table role="presentation" class="container card" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td class="px-24 py-24">
+                <!-- Hero -->
+                <table role="presentation" width="100%">
+                  <tr>
+                    <td class="text-center">
+                      <h1 class="h1">Welcome to AiShikkha 🎉</h1>
+                      <p class="body pt-16">Dear <strong>{{user_name}}</strong>,</p>
+                      <p class="body pt-8">
+                        We’re excited to have you on board. Thanks for your purchase!
+                        Your ebook is ready to download.
+                      </p>
+
+                      <!-- Primary CTA: Bulletproof button -->
+                      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center" class="pt-24">
+                        <tr>
+                          <td align="center" style="border-radius:999px;" bgcolor="#2563eb">
+                            <a class="btn btn-primary" href="{{download_url}}" target="_blank" style="mso-padding-alt:14px 22px; display:inline-block;">
+                              <!--[if mso]><i style="letter-spacing: 22px;mso-font-width:-100%;mso-text-raise:20pt">&nbsp;</i><![endif]-->
+                              <span style="mso-text-raise:12pt;">Download Your Ebook</span>
+                              <!--[if mso]><i style="letter-spacing: 22px;mso-font-width:-100%">&nbsp;</i><![endif]-->
+                            </a>
+                          </td>
+                        </tr>
+                      </table>
+
+                      <p class="muted pt-8">If the button doesn’t work, copy and paste this link into your browser:<br>
+                        <a href="{{download_url}}" target="_blank" style="color:#2563eb;">{{download_url}}</a>
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+
+                <div class="divider pt-24" aria-hidden="true"></div>
+
+                <!-- Community Section -->
+                <table role="presentation" width="100%">
+                  <tr>
+                    <td class="pt-24">
+                      <h2 class="h2">For updates, free sessions & courses</h2>
+                      <p class="body pt-8">Join our communities and never miss a thing:</p>
+
+                      <!-- CTA Row -->
+                      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="pt-16">
+                        <tr>
+                          <td align="center">
+                            <a class="btn btn-secondary" href="{{whatsapp_url}}" target="_blank" style="margin:4px 6px; display:inline-block;">Join WhatsApp</a>
+                            <a class="btn btn-secondary" href="{{fb_page_url}}" target="_blank" style="margin:4px 6px; display:inline-block;">FB Page</a>
+                            <a class="btn btn-secondary" href="{{fb_group_url}}" target="_blank" style="margin:4px 6px; display:inline-block;">FB Group</a>
+                          </td>
+                        </tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+
+                <div class="divider pt-24" aria-hidden="true"></div>
+
+                <!-- What’s next -->
+                <table role="presentation" width="100%">
+                  <tr>
+                    <td class="pt-24">
+                      <h2 class="h2">What’s next</h2>
+                      <ul class="body" style="padding-left:20px; margin:8px 0 0 0;">
+                        <li>Watch your inbox for tips on getting the most from your ebook.</li>
+                        <li>Join our WhatsApp or Facebook for reminders about free live sessions.</li>
+                        <li>Reply to this email anytime if you need help—real humans here.</li>
+                      </ul>
+                    </td>
+                  </tr>
+                </table>
+
+                <!-- Support -->
+                <table role="presentation" width="100%">
+                  <tr>
+                    <td class="pt-24">
+                      <p class="body">
+                        Warmly,<br>
+                        Team AiShikkha
+                      </p>
+                      <p class="muted pt-8">
+                        Need help? Email us at <a href="mailto:admin@aishikkha.com" class="hover-underline" style="color:#2563eb;">admin@aishikkha.com</a>
+                      </p>
+                    </td>
+                  </tr>
+                </table>
+
+              </td>
+            </tr>
+          </table>
+
+          <!-- Footer -->
+          <table role="presentation" class="container" cellpadding="0" cellspacing="0" border="0">
+            <tr>
+              <td class="text-center pt-16">
+                <p class="muted" style="margin:0;">
+                  © {{year}} AiShikkha. All rights reserved.
+                </p>
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+  </center>
+</body>
+</html>

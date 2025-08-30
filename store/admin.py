@@ -19,7 +19,7 @@ class ProductAdmin(admin.ModelAdmin):
 
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ['id', 'email', 'product', 'amount', 'status', 'created_at']
+    list_display = ['id', 'email', 'product', 'amount', 'status','downloads', 'created_at']
     list_filter = ['status', 'created_at', 'product']
     search_fields = ['email', 'id', 'bkash_payment_id', 'trx_id']
     readonly_fields = ['id', 'created_at', 'updated_at']
@@ -31,11 +31,11 @@ class OrderAdmin(admin.ModelAdmin):
 @admin.register(Review)
 class ReviewAdmin(admin.ModelAdmin):
     list_display = [
-        'title', 'product_name', 'rating_display', 
+         'product_name', 'rating_display', 
         'status_display', 'created_at', 'action_buttons'
     ]
     list_filter = ['status', 'rating', 'created_at', 'product']
-    search_fields = ['product__name', 'name', 'title', 'comment']
+    search_fields = ['product__name', 'name', 'comment']
     readonly_fields = ['created_at', 'updated_at', 'approved_at', 'approved_by']
     list_per_page = 25
     
@@ -44,7 +44,7 @@ class ReviewAdmin(admin.ModelAdmin):
             'fields': ('product', 'name', 'email')
         }),
         ('Review Content', {
-            'fields': ('rating', 'title', 'comment')
+            'fields': ('rating', 'comment')
         }),
         ('Status', {
             'fields': ('status',)
@@ -60,7 +60,7 @@ class ReviewAdmin(admin.ModelAdmin):
     def product_name(self, obj):
         """Display product name with link"""
         url = reverse('admin:store_review_change', args=[obj.id])
-        return format_html('<a href="{}">{}</a>', url, obj.product.title)
+        return format_html('<a href="{}">{}</a>', url, obj.product.email)
     product_name.short_description = 'Product'
     
     

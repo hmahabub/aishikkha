@@ -18,6 +18,10 @@ from .bkash_service import BkashService
 import json
 import logging
 
+import threading
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 
 
 from .models import Product, Category, Order, Review
@@ -65,7 +69,7 @@ class ProductListView(ListView):
     context_object_name = 'products'
     
     def get_queryset(self):
-        queryset = super().get_queryset()
+        queryset = super().get_queryset().order_by('-id')
         category_slug = self.kwargs.get('category_slug')
         if category_slug:
             category = get_object_or_404(Category, slug=category_slug)
@@ -337,7 +341,7 @@ def execute_payment(request):
                     order.save()
                     
                     # Send email with download link
-                    # send_ebook_email(order)
+                    send_ebook_email_async(order)
                     return redirect('store:payment_success', order_id=order.id)
 
                 except Order.DoesNotExist:
@@ -358,31 +362,37 @@ def execute_payment(request):
 def send_ebook_email(order):
     try:
         subject = f'Your eBook Purchase: {order.product.title}'
-        download_link = f"http://aishikkha.com/download/{order.id}/"  # Update with your domain
-        
-        message = f"""
-        Thank you for your purchase!
-        
-        Product: {order.product.title}
-        Order ID: {order.id}
-        Amount: {order.amount} BDT
-        Transaction ID: {order.trx_id}
-        
-        Download your eBook here: {download_link}
-        
-        This link will be valid for 30 days.
-        
-        Thank you for your business!
-        """
-        send_mail(
-            subject,
-            message,
-            settings.EMAIL_HOST_USER,
-            [order.email],
-            fail_silently=False,
-        )
+        download_link = f"http://aishikkha.com/payment/success/{order.id}/"
+        from_email = "admin@aishikkha.com"   # Replace with your sender email
+        to = [order.email]
+
+        # Render your HTML template (replace with your actual template path)
+        html_content = render_to_string("email/purchase_email.html", {
+            "year": 2025,
+            "download_url": download_link,
+            "website_url": "https://aishikkha.com",
+            "whatsapp_url": "https://chat.whatsapp.com/JltyoUsyrOPJ8WFjRSn7Rh?mode=ems_share_c",
+            "fb_page_url": "https://tinyurl.com/AiShikkhapage",
+            "fb_group_url": "https://tinyurl.com/AiShikkha",
+            "user_name": order.customer_name,
+        })
+
+        # Fallback plain text
+        text_content = strip_tags(html_content)
+
+        msg = EmailMultiAlternatives(subject, text_content, from_email, to)
+        msg.attach_alternative(html_content, "text/html")
+        msg.send()
     except Exception as e:
         logger.error(f"Email sending error: {str(e)}")
+
+def send_ebook_email_async(order):
+    """Send the email asynchronously using threading."""
+    thread = threading.Thread(
+        target=send_ebook_email,
+        args=(order,)
+    )
+    thread.start()
 
 def download_ebook(request, order_id):
     order = get_object_or_404(Order, id=order_id)

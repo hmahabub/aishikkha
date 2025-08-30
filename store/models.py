@@ -82,7 +82,6 @@ class Review(models.Model):
         choices=RATING_CHOICES,
         validators=[MinValueValidator(1), MaxValueValidator(5)]
     )
-    title = models.CharField(max_length=200, help_text="Review title")
     comment = models.TextField(help_text="Your detailed review")
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
